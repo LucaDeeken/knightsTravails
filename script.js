@@ -30,11 +30,13 @@ class chessBoard {
   }
 
   giveOptions(cordinate) {
+    console.log(cordinate);
     let arrayWithPositions = [];
     let cordsfirstNum = Number(cordinate.toString()[0]);
     let cordssecondNum = Number(cordinate.toString()[1]);
 
     for (let i = 0; i < 8; i++) {
+        console.log(this.firsNumArr);
       let firstOne = cordsfirstNum + this.firsNumArr.shift();
       console.log(firstOne);
       let secondOne = cordssecondNum + this.secondNumArr.shift();
@@ -45,6 +47,8 @@ class chessBoard {
       arrayWithPositions.push(final);
     }
     console.log(arrayWithPositions);
+    this.firsNumArr = [1, 1, -1, -1, 2, 2, -2, -2];
+    this.secondNumArr = [2, -2, -2, 2, 1, -1, -1, 1];
     return arrayWithPositions;
   }
 }
