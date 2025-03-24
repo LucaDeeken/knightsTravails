@@ -1,4 +1,4 @@
-import { Node, LinkedList } from "./linkedList.js";
+import { LinkedList } from "./linkedList.js";
 
 class chessBoard {
   constructor() {
@@ -84,4 +84,4 @@ class chessBoard {
 }
 
 const newBoard = new chessBoard();
-console.log(newBoard.findPath([0, 0], [7, 0]));
+console.log(newBoard.findPath([0, 0], [0,0]));
