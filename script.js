@@ -2,6 +2,7 @@ import { Node, LinkedList } from "./linkedList.js";
 
 class chessBoard {
   constructor() {
+    this.queue = [];
     this.firsNumArr = [1, 1, -1, -1, 2, 2, -2, -2];
     this.secondNumArr = [2, -2, -2, 2, 1, -1, -1, 1];
     this.board = [];
@@ -9,36 +10,26 @@ class chessBoard {
       let array = [];
       for (let j = 0; j < 8; j++) {
         let linkedList = new LinkedList();
-
         let combined = String(i) + String(j);
-        console.log(combined);
         let arrayOutput = this.giveOptions(combined);
-        console.log(arrayOutput);
         let lengthOfArray = arrayOutput.length;
-        console.log(lengthOfArray);
 
         for (let k = 0; k < lengthOfArray; k++) {
-            console.log(k);
-            console.log(arrayOutput[k]);
           linkedList.append(arrayOutput[k]);
         }
         array.push(linkedList);
-        console.log(array);
       }
       this.board.push(array);
     }
   }
-
+  //takes an input coordinate and returns an array that tells, which fields can be reached from this point
   giveOptions(cordinate) {
-    console.log(cordinate);
     let arrayWithPositions = [];
     let cordsfirstNum = Number(cordinate.toString()[0]);
     let cordssecondNum = Number(cordinate.toString()[1]);
 
     for (let i = 0; i < 8; i++) {
-        console.log(this.firsNumArr);
       let firstOne = cordsfirstNum + this.firsNumArr.shift();
-      console.log(firstOne);
       let secondOne = cordssecondNum + this.secondNumArr.shift();
       if (firstOne < 0 || secondOne < 0 || firstOne > 7 || secondOne > 7) {
         continue;
@@ -46,45 +37,51 @@ class chessBoard {
       let final = String(firstOne) + String(secondOne);
       arrayWithPositions.push(final);
     }
-    console.log(arrayWithPositions);
     this.firsNumArr = [1, 1, -1, -1, 2, 2, -2, -2];
     this.secondNumArr = [2, -2, -2, 2, 1, -1, -1, 1];
     return arrayWithPositions;
   }
+  //returns an array that shows the shortest path from start- to destinationField
+  findPath(start, destination) {
+    let string = String(start.shift());
+    let stringTwo = String(start.shift());
+    start = string + stringTwo;
+
+    string = String(destination.shift());
+    stringTwo = String(destination.shift());
+    destination = string + stringTwo;
+
+    this.queue.push({ position: start, path: [] });
+    const doubles = [start];
+    let wholePath = [];
+    const findPathRecursive = (queue) => {
+      let toFind = queue.shift();
+      let arrayWithPositions = this.giveOptions(toFind.position);
+      let found = arrayWithPositions.find((el) => el === destination);
+      if (found != undefined) {
+        wholePath = [...toFind.path, toFind.position, found];
+        return wholePath;
+      } else {
+        while (arrayWithPositions.length > 0) {
+          const arrElement = arrayWithPositions.shift();
+          const fieldAlreadyUsed = doubles.find((el) => el === arrElement);
+          if (fieldAlreadyUsed === undefined) {
+            queue.push({
+              position: arrElement,
+              path: [...toFind.path, toFind.position],
+            });
+            doubles.push(arrElement);
+          } else {
+          }
+        }
+      }
+      findPathRecursive(queue);
+      return;
+    };
+    findPathRecursive(this.queue);
+    return wholePath;
+  }
 }
 
 const newBoard = new chessBoard();
-console.log(newBoard);
-
-// levelOrder(callback) {
-//     if (typeof callback != "function") {
-//       throw new Error("You need to attach a callback-function!");
-//     }
-//     let root = this.root;
-//     this.evenCount = 0;
-//     if (root === null) {
-//       return null;
-//     }
-
-//     function queueWork(queue) {
-//       if (queue.length === 0) {
-//         return;
-//       }
-
-//       let currentNode = queue.shift();
-//       callback(currentNode);
-//       if (currentNode.left != null) {
-//         let currentNodeLeft = currentNode.left;
-//         queue.push(currentNodeLeft);
-//       }
-//       if (currentNode.right != null) {
-//         let currentNodeLeft = currentNode.right;
-//         queue.push(currentNodeLeft);
-//       }
-
-//       return queueWork(queue);
-//     }
-
-//     queueWork([this.root]);
-//     console.log(this.evenCount);
-//   }
+console.log(newBoard.findPath([0, 0], [7, 0]));

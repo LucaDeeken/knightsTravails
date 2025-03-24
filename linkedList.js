@@ -1,9 +1,6 @@
 export class Node {
   constructor(key) {
     this.key = key;
-    this.arrayWithPositions = [];
-    this.firsNumArr = [1, 1, -1, -1, 2, 2, -2, -2];
-    this.secondNumArr = [2, -2, -2, 2, 1, -1, -1, 1];
     this.next = null;
   }
 }
@@ -18,7 +15,6 @@ export class LinkedList {
   }
   append(key) {
     const node = new Node(key);
-    console.log(key);
     if (this.isEmpty()) {
       this.head = node;
     } else {
@@ -31,7 +27,4 @@ export class LinkedList {
     }
     this.size++;
   }
-
-
-
 }
